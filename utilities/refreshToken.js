@@ -30,8 +30,8 @@ module.exports = async function (req, res, next) {
         console.log('access_token', response.data.access_token);
         if (response.data) {
           const { access_token, refresh_token } = response.data;
-          tokenExpiration = Date.now() + 60 * 60 * 1000;
-          accessToken = access_token;
+          req.session.passport.user.tokenExpiration = Date.now() + 60 * 60 * 1000;
+          req.session.passport.user.accessToken = access_token;
           const user = await User.findById(id);
           user.refreshToken = refresh_token
           await user.save();

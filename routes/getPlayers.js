@@ -12,12 +12,12 @@ router.get('/', (req, res, next) => {
     headers: { 'Authorization': 'Bearer ' + accessToken }
   };
   axios.get(
-    `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}?format=json`,
+    `https://fantasysports.yahooapis.com/fantasy/v2/players?format=json`,
     config
   )
     .then(response => {
-      console.log(response.data)
-      res.status(200).send('data gathered');
+      console.log(JSON.stringify(response.data, null, '  '))
+      res.status(200).send(JSON.stringify(response.data, null, '  '));
     })
     .catch(err => {
       console.log('There was an error.', err.response.data)
