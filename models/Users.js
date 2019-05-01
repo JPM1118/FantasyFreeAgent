@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   guid: String,
+  name: String,
   leagues: [
     {
       leagueKey: String,
@@ -10,7 +11,7 @@ const UserSchema = new Schema({
       leagueUrl: String
     }
   ],
-  refreshToken: String
+  refreshToken: String,
 });
 
 module.exports = mongoose.model("User", UserSchema);

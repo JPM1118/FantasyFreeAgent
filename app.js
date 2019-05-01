@@ -1,14 +1,17 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
+const cors = require('cors');
 
 const app = express();
 const MongoStore = require('connect-mongo')(session);
 const auth = require('./routes/auth');
+const getUser = require('./routes/getUser');
 const getPlayers = require('./routes/getPlayers');
 const passportSetup = require('./config/passportSetup');
 
@@ -31,6 +34,22 @@ mongoose.connect(MONGO_URI, options).then(
   }
 );
 const db = mongoose.connection;
+const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'http://lvh.me/getUser']
+let corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) {
+      callback(null, true)
+    }
+    else if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error(origin, 'Not allowed by CORS'))
+    }
+  },
+  credentials: true
+}
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -48,13 +67,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.set('view engine', 'ejs');
-
+app.use(express.static(path.join(__dirname, 'public')))
 app.use(('/auth'), auth);
+app.use(('/getUser'), getUser);
 app.use(('/getPlayers'), getPlayers);
 
-app.get('/', (req, res) => res.render('home'));
+app.get('/', (req, res) => res.redirect('/auth/login'));
 
 app.listen(PORT, console.log(`Server has started on ${PORT}`));
 

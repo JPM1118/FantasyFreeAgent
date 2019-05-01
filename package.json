@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js --ignore chrome_extension/*"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.3",
     "connect-mongoose": "0.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
@@ -25,7 +26,8 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-oauth2": "^1.5.0",
     "passport-yahoo-oauth": "^0.2.0",
-    "passport-yahoo-oauth2": "^0.2.6"
+    "passport-yahoo-oauth2": "^0.2.6",
+    "qs": "^6.7.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"

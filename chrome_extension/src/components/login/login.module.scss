@@ -1,0 +1,14 @@
+.loggedOut{
+  text-align: center;
+  padding: 15px;
+  color: #5A2B73;
+  font-weight: bold;
+}
+.loginRedirect{
+  text-decoration: underline;
+  color: #5A2B73;
+  cursor: pointer;
+  &:hover{
+    color:grey;
+  }
+}

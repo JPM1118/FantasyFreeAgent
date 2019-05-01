@@ -1,0 +1,40 @@
+@import '../variables.scss';
+
+.content{
+  // position: absolute;
+  margin: 15px 0;
+}
+
+.currentSelection{
+  position: relative;
+  // top: 0px;
+  margin-left: 10px;
+  display: inline-block;
+  width: 175px;
+  padding: 2px 5px;
+  border: 1px solid $purple;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.menuToggle{
+  position: relative;
+  top: 8px;
+  left: 2px;
+  display: inline-block;
+}
+.list{
+  position: relative;
+  top: 0px;
+  margin-left: 10px;
+  // display: inline-block;
+  width: 175px;
+  // padding: 2px 5px;
+  border: 1px solid $purple;
+  border-bottom: 0;
+}
+.listItem{
+  padding: 2px 5px;
+  border-bottom: 1px solid $purple;
+  cursor: pointer;
+}
