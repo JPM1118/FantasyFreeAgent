@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import dropDownStyles from './dropDown.module.scss';
 import downArrow from './downArrow.png';
@@ -8,7 +8,9 @@ export default (props) => {
   const [openMenu, setOpenMenu] = useState(false)
   const [listSelection, setListSelection] = useState(props.list[0])
 
-  const { list } = props;
+  useEffect(() => callback(listSelection), [listSelection])
+
+  const { list, callback } = props;
   return (
     <div className={dropDownStyles.content}>
       <div className={dropDownStyles.currentSelection}>{listSelection.leagueName}</div>
@@ -24,14 +26,14 @@ export default (props) => {
             return <div
               className={dropDownStyles.listItem}
               key={idx}
-              onClick={() => { setListSelection(item); setOpenMenu(!openMenu) }}
+              onClick={() => { setListSelection(item); setOpenMenu(!openMenu); }}
             >
               {item.leagueName}
             </div>
           })}
         </div>
       }
-      {console.log('from dropDown.js', props.list)}
+      {/* {console.log('from dropDown.js', props.list)} */}
     </div>
   )
 }

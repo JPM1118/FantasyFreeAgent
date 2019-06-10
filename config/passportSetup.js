@@ -51,9 +51,12 @@ try {
         Object.keys(leaguesObject).forEach((key, index) => {
           if (leaguesObject[key].hasOwnProperty('league')) {
             userLeagueArray.push({
-              leagueKey: leaguesObject[key].league[0].league_key,
-              leagueName: leaguesObject[key].league[0].name,
-              leagueUrl: leaguesObject[key].league[0].url
+              leagueInfo: {
+                leagueKey: leaguesObject[key].league[0].league_key,
+                leagueName: leaguesObject[key].league[0].name,
+                leagueUrl: leaguesObject[key].league[0].url
+              },
+              players: []
             })
           }
         })

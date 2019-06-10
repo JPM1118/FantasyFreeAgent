@@ -1,7 +1,7 @@
 @import '../variables.scss';
 
 .content{
-  // position: absolute;
+  position: relative;
   margin: 15px 0;
 }
 
@@ -9,6 +9,7 @@
   position: relative;
   // top: 0px;
   margin-left: 10px;
+  margin-bottom: -5px;
   display: inline-block;
   width: 175px;
   padding: 2px 5px;
@@ -19,14 +20,17 @@
 }
 .menuToggle{
   position: relative;
+  display: inline-block;
+  cursor: pointer;
   top: 8px;
   left: 2px;
-  display: inline-block;
+  
 }
 .list{
   position: relative;
   top: 0px;
   margin-left: 10px;
+  margin-top: 0px;
   // display: inline-block;
   width: 175px;
   // padding: 2px 5px;
@@ -34,7 +38,9 @@
   border-bottom: 0;
 }
 .listItem{
-  padding: 2px 5px;
+  font-style: italic;
+  font-size: .8rem; 
+  padding: 5px 10px;
   border-bottom: 1px solid $purple;
   cursor: pointer;
 }

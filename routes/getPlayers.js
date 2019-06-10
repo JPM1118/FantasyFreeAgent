@@ -1,28 +1,28 @@
 const router = require('express').Router();
-const axios = require('axios');
 
-const refreshToken = require('../utilities/refreshToken');
+const User = require('../models/Users');
 
-router.use(refreshToken);
-router.get('/', (req, res, next) => {
-  const { accessToken } = req.session.passport.user;
-  const { leagues } = req.user;
-  const { leagueKey } = leagues[0];
-  const config = {
-    headers: { 'Authorization': 'Bearer ' + accessToken }
-  };
-  axios.get(
-    `https://fantasysports.yahooapis.com/fantasy/v2/players?format=json`,
-    config
-  )
-    .then(response => {
-      console.log(JSON.stringify(response.data, null, '  '))
-      res.status(200).send(JSON.stringify(response.data, null, '  '));
-    })
-    .catch(err => {
-      console.log('There was an error.', err.response.data)
-    })
+
+router.get('/', async (req, res, next) => {
+
+  const userId = req.session.passport.user.id;
+  const leagueId = req.session.league.id;
+  try {
+    if (req.isAuthenticated()) {
+      console.log(league);
+      const players = await User.findById(userId)
+        .then(user => {
+          const league = user.players.id(leagueId)
+          return league.players
+        })
+        .catch(e => { console.error(e) })
+      res.status(200).json({ players: players })
+    } else {
+      res.status(404).send("Not Logged In.")
+    }
+  } catch (e) {
+    console.error(e);
+  }
 })
-
 
 module.exports = router;

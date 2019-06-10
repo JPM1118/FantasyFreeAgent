@@ -7,10 +7,12 @@
     "storage",
     "declarativeContent",
     "activeTab",
-    "http://www.lvh.me/"
+    "cookies",
+    "http://lvh.me/"
   ],
   "background": {
     "scripts": [
+      "chrome-extension-async.js",
       "background.js"
     ],
     "persistent": false

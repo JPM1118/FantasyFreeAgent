@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 window.onload = () => {
   let loginBtn = document.getElementById('loginBtn');
   if (loginBtn) {
