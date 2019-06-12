@@ -17,13 +17,13 @@ const User = require('./models/Users');
 //routes
 const auth = require('./routes/auth');
 const getUser = require('./routes/getUser');
-// const requestYhPlayers = require('./routes/requestYhPlayers');
 const getPlayers = require('./routes/getPlayers');
 const setLeauge = require('./routes/setLeague');
 const checkTransactions = require('./routes/checkTransactions');
 //custom middleware
 const refreshToken = require('./utilities/refreshToken');
-
+//utilities
+const requestYhPlayers = require('./utilities/requestYhPlayers')
 const passportSetup = require('./config/passportSetup');
 
 const PORT = process.env.PORT || 3000;
@@ -45,7 +45,7 @@ mongoose.connect(MONGO_URI, options).then(
   }
 );
 const db = mongoose.connection;
-const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'http://lvh.me/getUser']
+const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'chrome-extension://hlmhjiphcjclppmdjjalepbkeheiffnd', 'http://lvh.me/getUser']
 let corsOptions = {
   origin: function (origin, callback) {
     if (!origin) {
@@ -83,11 +83,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(('/auth'), auth);
 app.use(refreshToken);
 app.use(async (req, res, next) => {
-  const { id } = req.session.passport.user;
+  if (req.session.playerArrayFull) { next() }
+  const { id, accessToken } = req.session.passport.user;
   const user = await User.findById(id);
-
-  const league = req.session.league ? user.leagues.id(req.session.league.id) : user.leagues[0]
-  console.log(league)
+  const { leagues } = user;
+  Object.values(leagues).forEach(async league => {
+    if (league.players && league.players.length == 0) {
+      await requestYhPlayers(league, accessToken, id)
+    }
+    req.session.playerArrayFull = true;
+  })
   next();
 });
 app.use(('/getUser'), getUser);

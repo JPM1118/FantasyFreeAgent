@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const axios = require('axios');
 
-const requestYhPlayers = require('../routes/requestYhPlayers');
+const requestYhPlayers = require('../utilities/requestYhPlayers');
+const checkTransactionsHelper = require('../route_helpers/checkTransactionsHelper');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -10,6 +11,7 @@ router.get('/', async (req, res, next) => {
     if (!req.session.lastTransaction) {
       req.session.lastTransaction = Date.now()
     }
+    let lastTransaction = req.session.lastTransaction;
     // debugger;
     let latestTransactions = await axios.get(
       `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions?format=json`,
@@ -17,8 +19,10 @@ router.get('/', async (req, res, next) => {
         headers: { 'Authorization': 'Bearer ' + accessToken }
       })
     // debugger;
+    checkTransactionsHelper(latestTransactions, id, lastTransaction);
     let { timestamp } = latestTransactions.data.fantasy_content.league[1].transactions[0].transaction[0]
-    if (req.session.lastTransaction < timestamp) {
+    timestamp = parseInt(timestamp + '000');
+    if (lastTransaction < timestamp) {
       console.log('new transaction!')
       req.session.lastTransaction = timestamp;
       next()
@@ -30,10 +34,6 @@ router.get('/', async (req, res, next) => {
   } catch (err) {
     console.error(err);
   }
-})
-router.use(requestYhPlayers)
-router.use((req, res, next) => {
-  res.status(200).send(`Players updated.`)
 })
 
 module.exports = router

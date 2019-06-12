@@ -10,7 +10,7 @@ module.exports = async function (req, res, next) {
     let { id, tokenExpiration, accessToken } = req.session.passport.user
     const { YAH_CL_ID, YAH_CL_SECRET, YAH_REDIRECT_URI } = process.env
     const authHeaderEncode = Buffer.from(`${YAH_CL_ID}:${YAH_CL_SECRET}`).toString('base64')
-    console.log('from refreshToken.js', tokenExpiration - Date.now());
+    // console.log('from refreshToken.js', tokenExpiration - Date.now());
     if (tokenExpiration <= Date.now()) {
       const refreshToken = await User.findById(id)
         .then(user => user.refreshToken)
