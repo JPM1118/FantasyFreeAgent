@@ -13,7 +13,7 @@ export default (props) => {
   const { list, callback } = props;
   return (
     <div className={dropDownStyles.content}>
-      <div className={dropDownStyles.currentSelection}>{listSelection.leagueName}</div>
+      <div className={dropDownStyles.currentSelection}>{listSelection.leagueInfo.leagueName}</div>
       <div
         className={dropDownStyles.menuToggle}
         onClick={() => setOpenMenu(!openMenu)}
@@ -28,7 +28,7 @@ export default (props) => {
               key={idx}
               onClick={() => { setListSelection(item); setOpenMenu(!openMenu); }}
             >
-              {item.leagueName}
+              {item.leagueInfo.leagueName}
             </div>
           })}
         </div>

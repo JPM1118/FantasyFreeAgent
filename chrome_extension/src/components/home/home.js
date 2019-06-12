@@ -11,7 +11,7 @@ export default props => {
     <div className={homeStyles.content}>
       <h2 className={homeStyles.welcome}>Welcome, {props.user.name}</h2>
       <h3 className={homeStyles.leagueTitle}>Please select a league</h3>
-      <DropDown list={props.user.leagueInfo} callback={sendSelectedLeague} />
+      <DropDown list={props.user.leagues} callback={sendSelectedLeague} />
     </div>
   )
 }

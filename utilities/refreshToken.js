@@ -15,7 +15,7 @@ module.exports = async function (req, res, next) {
       const refreshToken = await User.findById(id)
         .then(user => user.refreshToken)
         .catch(err => console.error('refreshToken', err))
-      await axios({
+      const response = await axios({
         method: 'post',
         url: 'https://api.login.yahoo.com/oauth2/get_token',
         headers: {
@@ -28,18 +28,16 @@ module.exports = async function (req, res, next) {
           grant_type: 'refresh_token'
         })
       })
-        .then(async response => {
-          if (response.data) {
-            const { access_token, refresh_token } = response.data;
-            req.session.passport.user.tokenExpiration = Date.now() + 60 * 60 * 1000;
-            req.session.passport.user.accessToken = access_token;
-            const user = await User.findById(id);
-            user.refreshToken = refresh_token
-            await user.save();
-            next();
-          }
-        })
-        .catch(err => console.error('axios error', err.response))
+
+      if (response.data) {
+        const { access_token, refresh_token } = response.data;
+        req.session.passport.user.tokenExpiration = Date.now() + 60 * 60 * 1000;
+        req.session.passport.user.accessToken = access_token;
+        const user = await User.findById(id);
+        user.refreshToken = refresh_token
+        await user.save();
+        next();
+      }
     } else {
       console.log("no Refresh")
       next();

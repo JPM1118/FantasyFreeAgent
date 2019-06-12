@@ -5,12 +5,12 @@ router.get('/', (req, res, next) => {
   const leagueInfo = []
 
   for (const league of leagues) {
-    leagueInfo.push(league.leagueInfo)
+    leagueInfo.push({ leagueInfo: league.leagueInfo, id: league.id })
   }
   debugger;
 
   req.isAuthenticated()
-    ? res.status(200).json({ id: req.user.id, name: req.user.name, guid: req.user.guid, leagueInfo: leagueInfo })
+    ? res.status(200).json({ id: req.user.id, name: req.user.name, guid: req.user.guid, leagues: leagueInfo })
     : res.status(200).send("Not Logged In.")
 })
 

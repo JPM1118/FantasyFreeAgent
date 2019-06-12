@@ -12,10 +12,12 @@ const axios = require('axios');
 
 const app = express();
 const MongoStore = require('connect-mongo')(session);
+const User = require('./models/Users');
+
 //routes
 const auth = require('./routes/auth');
 const getUser = require('./routes/getUser');
-const requestYhPlayers = require('./routes/requestYhPlayers');
+// const requestYhPlayers = require('./routes/requestYhPlayers');
 const getPlayers = require('./routes/getPlayers');
 const setLeauge = require('./routes/setLeague');
 const checkTransactions = require('./routes/checkTransactions');
@@ -80,8 +82,16 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(('/auth'), auth);
 app.use(refreshToken);
+app.use(async (req, res, next) => {
+  const { id } = req.session.passport.user;
+  const user = await User.findById(id);
+
+  const league = req.session.league ? user.leagues.id(req.session.league.id) : user.leagues[0]
+  console.log(league)
+  next();
+});
 app.use(('/getUser'), getUser);
-app.use(('/requestYhPlayers'), requestYhPlayers);
+// app.use(('/requestYhPlayers'), requestYhPlayers);
 app.use(('/getPlayers'), getPlayers);
 app.use(('/setLeague'), setLeauge);
 app.use(('/checkTransactions'), checkTransactions);
