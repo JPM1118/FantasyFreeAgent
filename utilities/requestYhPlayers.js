@@ -31,6 +31,7 @@ module.exports = async function (league, accessToken, userId) {
     editedLeague.players = playerArray
     await user.save();
     console.log('Yahoo players fetched.')
+    return;
   } catch (e) {
     console.error(e);
   }

@@ -10,6 +10,14 @@
     "cookies",
     "http://lvh.me/"
   ],
+  "commands": {
+    "getPlayers": {
+      "suggested_key": {
+        "default": "Alt + X"
+      },
+      "description": "Send list of players."
+    }
+  },
   "background": {
     "scripts": [
       "chrome-extension-async.js",
@@ -26,6 +34,16 @@
       "128": "images/baseball32.png"
     }
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
   "icons": {
     "16": "images/baseball16.png",
     "32": "images/baseball32.png",

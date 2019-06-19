@@ -7,12 +7,9 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
-const cron = require('node-cron');
-const axios = require('axios');
 
 const app = express();
 const MongoStore = require('connect-mongo')(session);
-const User = require('./models/Users');
 
 //routes
 const auth = require('./routes/auth');
@@ -22,8 +19,8 @@ const setLeauge = require('./routes/setLeague');
 const checkTransactions = require('./routes/checkTransactions');
 //custom middleware
 const refreshToken = require('./utilities/refreshToken');
+const checkPlayerArray = require('./utilities/checkPlayerArray');
 //utilities
-const requestYhPlayers = require('./utilities/requestYhPlayers')
 const passportSetup = require('./config/passportSetup');
 
 const PORT = process.env.PORT || 3000;
@@ -77,39 +74,22 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')))
-app.use(('/auth'), auth);
-app.use(refreshToken);
-app.use(async (req, res, next) => {
-  if (req.session.playerArrayFull) { next() }
-  const { id, accessToken } = req.session.passport.user;
-  const user = await User.findById(id);
-  const { leagues } = user;
-  Object.values(leagues).forEach(async league => {
-    if (league.players && league.players.length == 0) {
-      await requestYhPlayers(league, accessToken, id)
-    }
-    req.session.playerArrayFull = true;
-  })
-  next();
-});
-app.use(('/getUser'), getUser);
-// app.use(('/requestYhPlayers'), requestYhPlayers);
-app.use(('/getPlayers'), getPlayers);
-app.use(('/setLeague'), setLeauge);
-app.use(('/checkTransactions'), checkTransactions);
 
+app.use(('/auth'), auth);
+app.use(('/getUser'), getUser);
+app.use(('/setLeague'), setLeauge);
+
+app.use(refreshToken);
+app.use(checkPlayerArray);
+// app.use(('/checkTransactions'), checkTransactions);
+app.use(('/getPlayers'), getPlayers);
+
+
+app.use(express.static(path.join(__dirname, 'public')))
 app.get('/', (req, res) => res.redirect('/auth/login'));
 
 app.listen(PORT, console.log(`Server has started on ${PORT}`));
 
-// cron.schedule('*/30 * * * * *', async () => {
-//   // console.log('I am a scheduled log!!')
-//   let request = await axios.get('/checkTransactions', {
-//     headers: { 'Cookie': 'connect.sid=s%3A_7ElHvr0oRn919cFzuRVArmFc4MEPea7.t7mxiy2imxbC3PFVgIhSZaD4lBxDa4AB4hF3BT12XSA' }
-//   });
-//   // // debugger;
-// })
+
 

@@ -2,5 +2,13 @@
 .content{
   color: $purple;
   width:95%;
-  margin: 0 auto
+  margin: 0 auto;
+  text-align: center;
+}
+.instructions{
+  text-align: left;
+  // list-style: none;
+  li{
+    margin-bottom: 15px;
+  }
 }

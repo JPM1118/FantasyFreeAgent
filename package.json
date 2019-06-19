@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js --ignore chrome_extension/*"
+    "dev": "nodemon app.js --ignore chrome_extension/*",
+    "debug": "nodemon --inspect app.js -- ignore chrome_extension/*"
   },
   "keywords": [],
   "author": "",

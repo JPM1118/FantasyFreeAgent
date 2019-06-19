@@ -1,21 +1,17 @@
 const router = require('express').Router();
 
 const User = require('../models/Users');
+const checkTransactions = require('../routes/checkTransactions');
 
-
+router.use(checkTransactions)
 router.get('/', async (req, res, next) => {
-
-  const userId = req.session.passport.user.id;
-  const leagueId = req.session.league.id;
   try {
+    const userId = req.session.passport.user.id;
+    const leagueId = req.session.league.id;
     if (req.isAuthenticated()) {
-      console.log(league);
-      const players = await User.findById(userId)
-        .then(user => {
-          const league = user.players.id(leagueId)
-          return league.players
-        })
-        .catch(e => { console.error(e) })
+      const user = await User.findById(userId)
+      const league = await user.leagues.id(leagueId)
+      const players = league.players
       res.status(200).json({ players: players })
     } else {
       res.status(404).send("Not Logged In.")
