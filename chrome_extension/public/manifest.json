@@ -16,6 +16,12 @@
         "default": "Alt + X"
       },
       "description": "Send list of players."
+    },
+    "test": {
+      "suggested_key": {
+        "default": "Alt + T"
+      },
+      "description": "Test."
     }
   },
   "background": {
@@ -40,7 +46,8 @@
         "<all_urls>"
       ],
       "js": [
-        "content.js"
+        "content.js",
+        "test.js"
       ]
     }
   ],
@@ -50,5 +57,8 @@
     "48": "images/baseball48.png",
     "128": "images/baseball128.png"
   },
+  "web_accessible_resources": [
+    "images/*"
+  ],
   "manifest_version": 2
 }

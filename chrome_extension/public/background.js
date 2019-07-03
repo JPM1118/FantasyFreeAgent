@@ -13,11 +13,11 @@ const getPlayers = async () => {
     console.error(err);
   }
 };
-const sendPlayers = async (players) => {
+const sendPlayers = async (players, cmd) => {
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
     const activeTab = tabs[0];
-    const response = await chrome.tabs.sendMessage(activeTab.id, { message: 'sending-players', players: ['lucas giolito', 'cole hamels', 'rich hill', 'trevor richards'] })
+    const response = await chrome.tabs.sendMessage(activeTab.id, { message: cmd, players: players.players })
     console.log(response)
   } catch (err) {
     console.error(err)
@@ -27,7 +27,12 @@ chrome.commands.onCommand.addListener(async function (command) {
   if (command === "getPlayers") {
     const players = await getPlayers()
     console.log(players.players);
-    await sendPlayers(players);
+    await sendPlayers(players, "sending-players");
+  }
+  else if (command === "test") {
+    const players = await getPlayers()
+    console.log(players.players);
+    await sendPlayers(players, "test");
   }
 })
 

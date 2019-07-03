@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 
-const treeWalker = (players) => {
+const test = (players) => {
   let body = document.body;
   let bodyCopy = body.cloneNode(true)
   let treeWalker = document.createTreeWalker(
@@ -45,10 +44,9 @@ const treeWalker = (players) => {
 
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    if (request.message === "sending-players") {
-      treeWalker(request.players);
+    if (request.message === "test") {
+      test(request.players)
       sendResponse({ gotIt: "Got it!" })
     }
   }
 )
-
