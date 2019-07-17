@@ -1,6 +1,9 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -17,6 +20,7 @@ const getUser = require('./routes/getUser');
 const getPlayers = require('./routes/getPlayers');
 const setLeauge = require('./routes/setLeague');
 const checkTransactions = require('./routes/checkTransactions');
+const fillPlayerArray = require('./routes/fillPlayerArray');
 //custom middleware
 const refreshToken = require('./utilities/refreshToken');
 const checkPlayerArray = require('./utilities/checkPlayerArray');
@@ -42,7 +46,7 @@ mongoose.connect(MONGO_URI, options).then(
   }
 );
 const db = mongoose.connection;
-const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'chrome-extension://hlmhjiphcjclppmdjjalepbkeheiffnd', 'http://lvh.me/getUser']
+const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'chrome-extension://hlmhjiphcjclppmdjjalepbkeheiffnd', 'https://localhost/getUser']
 let corsOptions = {
   origin: function (origin, callback) {
     if (!origin) {
@@ -64,7 +68,7 @@ app.use(bodyParser.json());
 app.use(
   session({
     maxAge: 1000 * 60 * 60 * 24 * 7 * 52, // 1 year
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET || 'imasecret',
     store: new MongoStore({
@@ -77,17 +81,22 @@ app.use(passport.session());
 app.set('view engine', 'ejs');
 
 app.use(('/auth'), auth);
+app.use(express.static(path.join(__dirname, 'public')))
+app.get('/', (req, res) => res.redirect('/auth/login'));
 app.use(('/getUser'), getUser);
 app.use(('/setLeague'), setLeauge);
-
 app.use(refreshToken);
-app.use(checkPlayerArray);
+app.use(('/fillPlayerArray'), checkPlayerArray, fillPlayerArray);
+// app.use(checkPlayerArray);
 // app.use(('/checkTransactions'), checkTransactions);
 app.use(('/getPlayers'), getPlayers);
 
 
-app.use(express.static(path.join(__dirname, 'public')))
-app.get('/', (req, res) => res.redirect('/auth/login'));
+
+// let server = https.createServer({
+//   key: fs.readFileSync('server.key'),
+//   cert: fs.readFileSync('server.crt')
+// }, app)
 
 app.listen(PORT, console.log(`Server has started on ${PORT}`));
 

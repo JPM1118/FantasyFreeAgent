@@ -6,10 +6,10 @@ const treeWalker = (players) => {
   let bodyCopy = body.cloneNode(true)
   let treeWalker = document.createTreeWalker(
     bodyCopy,
-    NodeFilter.SHOW_TEXT,
+    NodeFilter.SHOW_ELEMENT,
     node => {
       let regex = /\w+/gi
-      if (regex.test(node.textContent)) {
+      if (regex.test(node.textContent) && node.childNodes.length === 1) {
         return NodeFilter.FILTER_ACCEPT;
       } else {
         return NodeFilter.FILTER_SKIP;
@@ -24,18 +24,29 @@ const treeWalker = (players) => {
   }
   const check = chrome.runtime.getURL('images/check.png');
   const X = chrome.runtime.getURL('images/X.png');
+
+
   const intersection = (_players, _nodes) => {
     _nodes.forEach(node => {
-      let text = node.textContent; //To keep reference to the parentNode.innerHTML
-      _players.forEach((player) => {
-        if (text.includes(player.name.full)) {
-          let statusIcon = player.owned ? check : X;
-          let re = new RegExp(player.name.full, 'gi')
-          text = text.replace(re, `${player.name.full}<img src=${statusIcon} />`)
-        }
-      })
       if (node.parentNode) {
-        return node.parentNode.innerHTML = text;
+        let html = node.innerHTML; //To keep reference to the parentNode.innerHTML
+        function insertIcon(name, status) {
+          if (html.includes(name)) {
+            let statusIcon = status ? check : X;
+            let re = new RegExp(`(${name})(?!<img id='inject')`, 'gi')
+            html = html.replace(re, `${name}<img id='inject' src=${statusIcon} />`)
+          }
+        }
+        _players.forEach((player) => {
+          if (/[\u{00c0}-\u{00ff}]/ui.test(player.name.full)) {
+            const asciiName = `${player.name.ascii_first} ${player.name.ascii_last}`
+            insertIcon(asciiName, player.owned)
+          }
+          else {
+            insertIcon(player.name.full, player.owned)
+          }
+        })
+        return node.innerHTML = html;
       }
     })
   }

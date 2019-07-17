@@ -5,6 +5,7 @@ import DropDown from '../dropDown/dropDown';
 import sendSelectedLeague from '../../callback_props/sendSelectedLeague';
 import available from '../home/check.png'
 import notAvailable from '../home/X.png'
+import Logout from '../logout/logout.js'
 
 
 export default props => {
@@ -20,6 +21,7 @@ export default props => {
         <li><img src={available} alt="Is available icon." /> icon means player is available</li>
         <li><img src={notAvailable} alt="Is not available icon." /> icon means player is not available</li>
       </ul>
+      <Logout logoutClick={props.logoutClick} />
     </div>
   )
 }

@@ -28,22 +28,16 @@ try {
         let config = {
           headers: { 'Authorization': 'Bearer ' + accessToken }
         };
-        const fantasyInfo = await axios.get(
+        const fantasyInfoResponse = await axios.get(
           'https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=388/leagues?format=json',
-          config
-        )
-          .then(res => {
-            return res.data.fantasy_content.users[0].user
-          })
-          .catch(err => console.log('err', err))
+          config)
+        const fantasyInfo = fantasyInfoResponse.data.fantasy_content.users[0].user
+
         const guid = fantasyInfo[0].guid
-        const yProfile = await axios.get(
+        const yProfileResponse = await axios.get(
           `https://social.yahooapis.com/v1/user/${guid}/profile`,
           config)
-          .then(res => {
-            return res.data.profile
-          })
-          .catch(err => console.log('err', err))
+        const yProfile = yProfileResponse.data.profile
 
         let userLeagueArray = [];
         const leaguesObject = fantasyInfo[1].games[0].game[1].leagues
@@ -60,28 +54,20 @@ try {
             })
           }
         })
-        User.findOne({ guid: guid })
-          .then(currentUser => {
-            if (currentUser) {
-              done(null, { id: currentUser.id, accessToken, tokenExpiration })
-            } else {
-              new User({
-                guid: fantasyInfo[0].guid,
-                name: yProfile.nickname,
-                leagues: userLeagueArray,
-                refreshToken: refreshToken,
-              })
-                .save()
-                .then(newUser => {
-                  done(null, { id: newUser.id, accessToken, tokenExpiration });
-                })
-                .catch(err => done(err))
-            }
+        let user = await User.findOne({ guid: guid })
+        if (user) {
+          done(null, { id: user.id, accessToken, tokenExpiration })
+        } else {
+          const newUser = new User({
+            guid: fantasyInfo[0].guid,
+            name: yProfile.nickname,
+            leagues: userLeagueArray,
+            refreshToken: refreshToken,
           })
-          .catch(err => {
-            console.log(err)
-            done(err)
-          })
+          const savedUser = await newUser.save()
+          done(null, { id: savedUser.id, accessToken, tokenExpiration });
+        }
+
       }
     )
   )

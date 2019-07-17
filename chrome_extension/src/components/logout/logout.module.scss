@@ -1,0 +1,13 @@
+@import '../variables.scss';
+.content{
+  margin-top: 40px;
+}
+.link{
+  color: $purple;
+  text-decoration: underline;
+  font-weight: bold; 
+  cursor: pointer;
+  &:hover{
+    color: blue;
+  }
+}

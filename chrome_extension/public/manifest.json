@@ -8,7 +8,8 @@
     "declarativeContent",
     "activeTab",
     "cookies",
-    "http://lvh.me/"
+    "https://lvh.me/",
+    "https://localhost/"
   ],
   "commands": {
     "getPlayers": {
@@ -26,7 +27,6 @@
   },
   "background": {
     "scripts": [
-      "chrome-extension-async.js",
       "background.js"
     ],
     "persistent": false
