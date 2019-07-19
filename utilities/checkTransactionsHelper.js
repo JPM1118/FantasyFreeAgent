@@ -31,7 +31,6 @@ module.exports = async (transactions, id, leagueId, timestamp) => {
                     }
                 })
             } else {
-                console.log('break');
                 break;
             }
         }
@@ -46,11 +45,8 @@ module.exports = async (transactions, id, leagueId, timestamp) => {
         user.markModified('leagues');
         await user.save();
 
-        let newUser = await User.findById(id);
-
-        console.log('...')
-    } catch (err) {
-        console.error(err);
+    } catch (e) {
+        console.error(e);
     }
 
 

@@ -3,7 +3,6 @@ const router = require('express').Router();
 router.get('/', (req, res, next) => {
   const loggedIn = req.isAuthenticated()
   const playerArrayFull = req.session.playerArrayFull ? true : false;
-  // const playerArrayFull = false;
   console.log(loggedIn)
   if (loggedIn) {
     const { leagues } = req.user;

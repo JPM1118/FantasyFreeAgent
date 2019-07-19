@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const User = require('../models/Users');
-const checkTransactions = require('../routes/checkTransactions');
+const checkTransactions = require('../middleware/checkTransactions');
 
 router.use(checkTransactions)
 router.get('/', async (req, res, next) => {
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
       res.status(404).send("Not Logged In.")
     }
   } catch (e) {
-    console.error(e);
+    next(e);
   }
 })
 

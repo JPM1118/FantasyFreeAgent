@@ -19,11 +19,11 @@ const auth = require('./routes/auth');
 const getUser = require('./routes/getUser');
 const getPlayers = require('./routes/getPlayers');
 const setLeauge = require('./routes/setLeague');
-const checkTransactions = require('./routes/checkTransactions');
+const checkTransactions = require('./middleware/checkTransactions');
 const fillPlayerArray = require('./routes/fillPlayerArray');
 //custom middleware
-const refreshToken = require('./utilities/refreshToken');
-const checkPlayerArray = require('./utilities/checkPlayerArray');
+const refreshToken = require('./middleware/refreshToken');
+const checkPlayerArray = require('./middleware/checkPlayerArray');
 //utilities
 const passportSetup = require('./config/passportSetup');
 
@@ -43,25 +43,17 @@ mongoose.connect(MONGO_URI, options).then(
   },
   err => {
     console.log("Error connecting Database instance due to: ", err);
+    next(err)
   }
 );
 const db = mongoose.connection;
-const whitelist = ['http://localhost:3000', 'chrome-extension://cfdjhkldccfabnkcglfmlknhngghgalm', 'chrome-extension://hlmhjiphcjclppmdjjalepbkeheiffnd', 'https://localhost/getUser']
-let corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) {
-      callback(null, true)
-    }
-    else if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error(origin, 'Not allowed by CORS'))
-    }
-  },
-  credentials: true
+if (process.env.NODE_ENV === 'production') {
+  console.log('prod')
+  app.use(cors({ credentials: true }));
+} else {
+  console.log('not prod')
+  app.use(cors({ origin: ['http://localhost:3000'], credentials: true }));
 }
-app.use(cors(corsOptions));
-// app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -87,17 +79,18 @@ app.use(('/getUser'), getUser);
 app.use(('/setLeague'), setLeauge);
 app.use(refreshToken);
 app.use(('/fillPlayerArray'), checkPlayerArray, fillPlayerArray);
-// app.use(checkPlayerArray);
-// app.use(('/checkTransactions'), checkTransactions);
+app.use(('/checkTransactions'), checkTransactions);
 app.use(('/getPlayers'), getPlayers);
 
 
-
-// let server = https.createServer({
-//   key: fs.readFileSync('server.key'),
-//   cert: fs.readFileSync('server.crt')
-// }, app)
-
+app.use(function (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500)
+  res.json('Something went wrong. Please try again.')
+  console.error(err)
+})
 app.listen(PORT, console.log(`Server has started on ${PORT}`));
 
 

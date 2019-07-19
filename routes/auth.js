@@ -3,25 +3,35 @@ const passport = require('passport');
 
 require('dotenv').config();
 
-router.get('/login', (req, res) => {
-  res.render('login');
+router.get('/login', (req, res, next) => {
+  try {
+    res.render('login');
+  } catch (e) { next(e) }
 })
-router.get('/success', (req, res) => {
-  res.render('success');
+router.get('/success', (req, res, next) => {
+  try {
+    res.render('success');
+  } catch (e) { next(e) }
+
 })
-router.get('/logout', (req, res) => {
-  req.logOut();
-  // res.redirect(`${process.env.FRONTEND_HOME}`);
-  // res.render('login');
-  res.status(200).send('you are logged out')
+router.get('/logout', (req, res, next) => {
+  try {
+    req.logOut();
+    res.status(200).send('you are logged out')
+  } catch (e) { next(e) }
+
 })
 router.get('/yahoo', passport.authenticate('oauth2', { failureRedirect: '/login' }),
-  function (req, res) {
+  function (req, res, next) {
+    try {
+
+    } catch (e) { next(e) }
   }
 )
-router.get('/yahoo/redirect', passport.authenticate('oauth2'), (req, res) => {
-  res.redirect('/auth/success')
-  // return res.sendStatus(200)
+router.get('/yahoo/redirect', passport.authenticate('oauth2'), (req, res, next) => {
+  try {
+    res.redirect('/auth/success')
+  } catch (e) { next(e) }
 })
 
 

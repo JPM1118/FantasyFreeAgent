@@ -44,7 +44,7 @@ module.exports = async function (req, res, next) {
         next();
       }
     } catch (e) {
-      console.error(e);
+      next(e)
     }
   } else {
     next()

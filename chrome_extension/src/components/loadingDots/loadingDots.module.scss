@@ -1,0 +1,32 @@
+@import '../variables.scss';
+
+.content{
+  position: relative;
+  color: $purple;
+  font-weight: bold;
+  margin-top: 50px;
+
+}
+.dot{
+  position: relative;
+  display: inline-block;
+  bottom: 0px;
+  animation: rise 1s ease-in-out infinite;
+}
+
+@for $i from 2 through 4 {
+  .dot{
+    &:nth-child(#{$i}){
+      animation-delay: ($i - 1) * .1s;
+    }
+  }
+}
+
+@keyframes rise {
+  0% {
+    transform:translateY(0%) ;
+  }
+  50%{
+    transform: translateY(-50%);
+  }
+}

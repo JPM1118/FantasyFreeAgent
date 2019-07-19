@@ -17,12 +17,6 @@
         "default": "Alt + X"
       },
       "description": "Send list of players."
-    },
-    "test": {
-      "suggested_key": {
-        "default": "Alt + T"
-      },
-      "description": "Test."
     }
   },
   "background": {

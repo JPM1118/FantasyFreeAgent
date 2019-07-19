@@ -1,9 +1,8 @@
 const router = require('express').Router();
 const axios = require('axios');
 
-const checkTransactionsHelper = require('../route_helpers/checkTransactionsHelper');
+const checkTransactionsHelper = require('../utilities/checkTransactionsHelper');
 
-// router.get('/', async (req, res, next) => {
 module.exports = async (req, res, next) => {
   try {
     const { accessToken, id } = req.session.passport.user;
@@ -22,19 +21,13 @@ module.exports = async (req, res, next) => {
     timestamp = parseInt(timestamp + '000');
 
     if (lastTransaction < timestamp) {
-      console.log('new transaction!')
       await checkTransactionsHelper(latestTransactions, id, leagueId, lastTransaction);
       req.session.lastTransaction = timestamp;
-      // res.status(200).send("Players have been updated.");
       next()
     } else {
-      console.log('players are up-to-date')
-      // res.status(200).send("Players are already up-to-date.");
       next()
     }
-  } catch (err) {
-    console.error(err);
+  } catch (e) {
+    next(e)
   }
 }
-
-// module.exports = router
