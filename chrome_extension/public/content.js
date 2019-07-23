@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener(
 
     if (request.message === "getPlayers") {
       msgBox('Player information is loading..')
-      fetch(`https://lvh.me/getPlayers`, { credentials: 'include' })
+      fetch(`https://fantasyfa.com/getPlayers`, { credentials: 'include' })
         .then(function (response) {
           return response.json()
         })
