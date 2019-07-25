@@ -1,7 +1,7 @@
 {
   "name": "Fantasy Free Agent",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Find out if a player is available in your Yahoo baseball league anywhere on the web.",
   "permissions": [
     "tabs",
     "storage",

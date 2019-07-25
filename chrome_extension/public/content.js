@@ -37,9 +37,15 @@ const run = (players) => {
       if (node.parentNode) {
         let newNode = node.parentNode.cloneNode(true);
         function insertIcon(name) {
-          let matchedPlayer = _players.find(player => name === `${player.name.ascii_first} ${player.name.ascii_last}`)
-          let statusIcon = matchedPlayer.owned ? X : check;
-          return `${name}<img id="inject" src=${statusIcon} />`
+          const searchName = name.toLowerCase();
+          let matchedPlayer = _players.find(player => {
+            let asciiName = `${player.name.ascii_first} ${player.name.ascii_last}`
+            return searchName === asciiName.toLowerCase()
+          })
+          if (matchedPlayer) {
+            let statusIcon = matchedPlayer.owned ? X : check;
+            return `${name}<img id="inject" src=${statusIcon} />`
+          } else { return name }
         }
         newNode.innerHTML = newNode.innerHTML.replace(re, insertIcon)
 

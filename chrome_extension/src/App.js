@@ -11,7 +11,7 @@ const App = () => {
   return (
     <div className="App">
       <div className={appStyles.content}>
-        <h1 className={appStyles.title}>Fantasy Free Agents</h1>
+        <h1 className={appStyles.title}>Fantasy Free Agent</h1>
         <ErrorBoundary>
           <DisplayedApp />
         </ErrorBoundary>
