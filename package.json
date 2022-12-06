@@ -30,7 +30,7 @@
     "passport-oauth2": "^1.5.0",
     "passport-yahoo-oauth": "^0.2.0",
     "passport-yahoo-oauth2": "^0.2.6",
-    "qs": "^6.7.0"
+    "qs": "^6.7.3"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
